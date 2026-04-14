@@ -1,45 +1,45 @@
 # stt.py
-# Yeh file audio ko text mein convert karti hai
+
 
 import os
 from groq import Groq
 from dotenv import load_dotenv
 
-# .env file se API key lo
+# Take API from .env
 load_dotenv()
 
-# Groq client banao
+# Make Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def transcribe_audio(file_path):
     """
     Audio file lo aur text return karo
-    file_path = audio file ka path
+    file_path = path of audio file 
     """
     
-    # Check karo file exist karti hai ya nahi
+    # Check Whether the file exit or not
     if not os.path.exists(file_path):
-        return "Error: Audio file nahi mili!"
+        return "Error: Audio file not found!"
     
     try:
-        # Audio file kholo
+        # Open Audio file 
         with open(file_path, "rb") as audio_file:
             
-            # Groq Whisper model ko audio do
+            # Give audio to Groq Whisper model 
             result = client.audio.transcriptions.create(
                 model="whisper-large-v3",
                 file=audio_file,
-                language="en"  # English ke liye
+                language="en"  # For English 
             )
         
-        # Text return karo
+        # Return text
         return result.text
     
     except Exception as e:
-        return f"Error aaya: {str(e)}"
+        return f"Error : {str(e)}"
 
 
-# Test karne ke liye
+# For Test 
 if __name__ == "__main__":
     print("STT module ready hai!")
     print("API Key loaded:", os.getenv("GROQ_API_KEY") is not None)

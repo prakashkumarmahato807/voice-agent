@@ -1,27 +1,27 @@
 # tools.py
-# Yeh file actual kaam karegi intent ke hisaab se
+
 
 import os
 from groq import Groq
 from dotenv import load_dotenv
 
-# .env se API key lo
+# Take API from .env 
 load_dotenv()
 
-# Groq client banao
+# Make Groq client 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# Output folder — yahan sab files banegi
+# Output folder 
 OUTPUT_DIR = "output/"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 def create_file(text):
     """
-    Nayi file banao
+    Make a new file 
     """
     try:
-        # AI se filename lo
+        # Take a filename from AI
         prompt = f"""
         Extract a simple filename from this text.
         Rules:
@@ -43,15 +43,15 @@ def create_file(text):
         filename = response.choices[0].message.content.strip()
         filename = filename.replace("\n", "").strip()
 
-        # Path banao
+        # Make Path
         filepath = os.path.join(OUTPUT_DIR, filename)
 
-        # File banao
+        # Make File 
         with open(filepath, "w") as f:
             f.write(f"# File created by Voice Agent\n")
             f.write(f"# Command: {text}\n")
 
-        return f"File bana di: {filepath}"
+        return f"Made File: {filepath}"
 
     except Exception as e:
         return f"Error: {str(e)}"
@@ -59,10 +59,10 @@ def create_file(text):
 
 def write_code(text):
     """
-    Code generate karo aur file mein save karo
+    Generate code and save file 
     """
     try:
-        # AI se code lo
+        # Take code from AI
         prompt = f"""
         Write Python code for this request.
         Rules:
@@ -81,10 +81,10 @@ def write_code(text):
 
         code = response.choices[0].message.content.strip()
 
-        # Code backticks remove karo agar ho
+        # If in Code backticks remove 
         code = code.replace("```python", "").replace("```", "").strip()
 
-        # File mein save karo
+        # Save in File
         filepath = os.path.join(OUTPUT_DIR, "generated_code.py")
         with open(filepath, "w") as f:
             f.write(code)
@@ -97,7 +97,7 @@ def write_code(text):
 
 def summarize(text):
     """
-    Text ka summary do
+    Text summary 
     """
     try:
         prompt = f"""
@@ -149,19 +149,19 @@ def general_chat(text):
         return f"Error: {str(e)}"
 
 
-# Test karne ke liye
+# For Test
 if __name__ == "__main__":
 
     print("Tools Test:")
     print("-" * 30)
 
-    # Test 1 - File banao
+    # Test 1 - Make File
     print("Test 1 - File Creation:")
     result = create_file("Create a file named my_notes")
     print(result)
     print("-" * 30)
 
-    # Test 2 - Code likho
+    # Test 2 - Write Code
     print("Test 2 - Code Writing:")
     code, path = write_code("Write a function to add two numbers")
     print(f"Code saved at: {path}")

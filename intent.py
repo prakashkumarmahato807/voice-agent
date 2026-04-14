@@ -1,19 +1,19 @@
 # intent.py
-# Yeh file samjhegi ki user kya chahta hai
+
 
 import os
 from groq import Groq
 from dotenv import load_dotenv
 
-# .env se API key lo
+# Take API from .env
 load_dotenv()
 
-# Groq client banao
+# Make Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def detect_intent(text):
     """
-    Text lo aur intent return karo
+    Take Text and return intent 
     4 intents hain:
     - create_file
     - write_code
@@ -51,13 +51,13 @@ def detect_intent(text):
             temperature=0.1
         )
 
-        # Intent text lo
+        # Take Intent text 
         intent = response.choices[0].message.content.strip().lower()
 
-        # Clean karo extra spaces ya newlines
+        # Clean extra spaces or newlines
         intent = intent.replace("\n", "").strip()
 
-        # Check karo valid intent hai ya nahi
+        # Check whether valid intent or not
         valid_intents = [
             "create_file",
             "write_code", 
@@ -74,7 +74,7 @@ def detect_intent(text):
         return f"Error: {str(e)}"
 
 
-# Test karne ke liye
+# For Test
 if __name__ == "__main__":
     
     # Test cases

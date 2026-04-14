@@ -14,38 +14,38 @@ st.set_page_config(
 
 # Title
 st.title("🎙️ Voice Controlled AI Agent")
-st.subheader("Mem0 Internship Assignment")
+st.subheader("Mem0 Internship Assignment - Voice AI Agent")
 st.markdown("---")
 
 # Instructions
 st.info("""
-**Kaise use karein:**
-1. Audio file upload karo (.wav ya .mp3)
-2. Agent automatically samjhega kya karna hai
-3. Result neeche dikhega
+**How to use:**
+1. Upload an audio file (.wav or .mp3)
+2. The agent will automatically detect your intent
+3. Results will be displayed below
 """)
 
 # Audio file upload
-st.markdown("### 📁 Audio File Upload Karo")
+st.markdown("### 📁 Upload Audio File")
 audio_file = st.file_uploader(
-    "Audio file choose karo",
+    "Choose an audio file",
     type=["wav", "mp3", "m4a"],
     help="Supported formats: WAV, MP3, M4A"
 )
 
-# Process karo jab file upload ho
+# Process Now when file is upload
 if audio_file is not None:
 
-    # Audio player dikhao
+    # show your audio player
     st.audio(audio_file)
 
     # Process button
-    if st.button("🚀 Process Karo", type="primary"):
+    if st.button("🚀 Process Now", type="primary"):
 
         # Step 1 - Transcribe
-        with st.spinner("🎧 Audio sun raha hun..."):
+        with st.spinner("🎧 Listening to audio..."):
 
-            # Temp file banao
+            #  create Temp file 
             suffix = "." + audio_file.name.split(".")[-1]
             with tempfile.NamedTemporaryFile(
                 delete=False,
@@ -54,24 +54,24 @@ if audio_file is not None:
                 tmp.write(audio_file.read())
                 tmp_path = tmp.name
 
-            # Transcribe karo
+            # do Transcribe 
             transcribed_text = transcribe_audio(tmp_path)
 
-            # Temp file delete karo
+            #  delete Temp file
             os.unlink(tmp_path)
 
-        # Transcription dikhao
+        # Show Transcription 
         st.markdown("### 📝 Transcribed Text")
         st.success(transcribed_text)
 
-        # Step 2 - Intent detect karo
-        with st.spinner("🧠 Samajh raha hun..."):
+        # Step 2 - detect Intent
+        with st.spinner("🧠 Understanding intent..."):
             intent = detect_intent(transcribed_text)
 
-        # Intent dikhao
+        # Show Intent 
         st.markdown("### 🎯 Detected Intent")
 
-        # Intent ke hisaab se color
+        # Colour according to Intent 
         if intent == "create_file":
             st.info(f"📄 Intent: **{intent}**")
         elif intent == "write_code":
@@ -81,12 +81,12 @@ if audio_file is not None:
         else:
             st.info(f"💬 Intent: **{intent}**")
 
-        # Step 3 - Execute karo
+        # Step 3 - Execute 
         st.markdown("### ⚡ Action aur Result")
 
-        with st.spinner("🔧 Kaam kar raha hun..."):
+        with st.spinner("🔧 Executing action..."):
 
-            # Intent ke hisaab se tool call karo
+            # According to Intent call the tool 
             if intent == "create_file":
                 result = create_file(transcribed_text)
                 st.success(f"✅ {result}")
@@ -95,7 +95,7 @@ if audio_file is not None:
                 code, filepath = write_code(transcribed_text)
 
                 if filepath:
-                    st.success(f"✅ Code file save ho gayi: {filepath}")
+                    st.success(f"✅ Code file has been saved: {filepath}")
                     st.markdown("**Generated Code:**")
                     st.code(code, language="python")
                 else:
@@ -103,19 +103,19 @@ if audio_file is not None:
 
             elif intent == "summarize":
                 summary = summarize(transcribed_text)
-                st.success("✅ Summary ready hai!")
+                st.success("✅ Summary is ready!")
                 st.markdown("**Summary:**")
                 st.write(summary)
 
             elif intent == "general_chat":
                 reply = general_chat(transcribed_text)
-                st.success("✅ Response ready hai!")
+                st.success("✅ Response is ready!")
                 st.markdown("**Response:**")
                 st.write(reply)
 
         st.markdown("---")
         st.balloons()
-        st.success("🎉 Sab kaam ho gaya!")
+        st.success("🎉 Task completed successfully!")
 
 # Sidebar mein info
 with st.sidebar:
@@ -140,10 +140,10 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("**Output Files:**")
 
-    # Output folder ki files dikhao
+    #  Show the Output folder files 
     output_files = os.listdir("output/") if os.path.exists("output/") else []
     if output_files:
         for f in output_files:
             st.text(f"📄 {f}")
     else:
-        st.text("Abhi koi file nahi hai")
+        st.text("No files yet")
